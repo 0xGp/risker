@@ -5,6 +5,19 @@ import { Store } from "./db.js";
 import { Executor } from "./executor.js";
 import { createTelegram } from "./telegram/bot.js";
 
+async function withRetry<T>(what: string, fn: () => Promise<T>, attempts = 10): Promise<T> {
+  for (let i = 1; ; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (i >= attempts) throw err;
+      const waitMs = Math.min(30_000, 2_000 * i);
+      console.log(`${what} failed (${(err as Error).message.split("\n")[0]}); retry ${i}/${attempts - 1} in ${waitMs / 1000} s`);
+      await new Promise((r) => setTimeout(r, waitMs));
+    }
+  }
+}
+
 async function main(): Promise<void> {
   const cfg = loadConfig();
   const store = new Store(cfg.dbPath);
@@ -14,7 +27,7 @@ async function main(): Promise<void> {
   const notifier: Notifier = tg?.notifier ?? { send: async (text) => console.log(`[notify] ${text}`) };
 
   console.log(`RiskGuard starting · owner ${cfg.owner} · ${cfg.dryRun ? "DRY RUN" : "LIVE"}`);
-  const chain = await connect(cfg);
+  const chain = await withRetry("connect", () => connect(cfg));
   if (!chain.tradingKey) console.log("No BOT_PRIVATE_KEY: read-only, the guard will alert but cannot act.");
   app = new App(chain, cfg, store, new Executor(chain, cfg, store), notifier);
   await app.start();
