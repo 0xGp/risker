@@ -1,0 +1,33 @@
+{
+  "name": "risker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RiskGuard: a Telegram liquidation guard for dreamDEX BTC-PERP on Somnia, with an optional 15-minute strategy.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "doctor": "tsx scripts/doctor.ts",
+    "evidence": "tsx scripts/evidence.ts",
+    "keygen": "tsx scripts/keygen.ts"
+  },
+  "dependencies": {
+    "@somnia-chain/markets-sdk": "^0.32.1",
+    "dotenv": "^18.0.9",
+    "grammy": "^1.46.0",
+    "viem": "^2.57.13",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.23.15",
+    "typescript": "5.9",
+    "vitest": "^5.0.5"
+  }
+}

@@ -247,6 +247,7 @@ How to get honest guard evidence: open real 15–20x manual longs/shorts in the 
 ## 18. Open items / blockers
 - ⚠️ **Critical:** the linked bot can reduce a position opened manually in the app (Day 1 spike). If not, fall back to v2 (guard on strategy positions only) and pitch it as a strategy bot.
 - ⚠️ One bot EOA linked by many owners (decides multi-tenant).
-- ⚠️ `accountPositions` view field names (liq price/health); whether the newest `fetchOHLCV` bucket is still open; explorer tx URL format; reading the account's current leverage in linked mode (kit `margin.ts` uses `getPerpMaxLeverage`).
+- ✅ `accountPositions` view fields (`marks.markPrice`, `liquidationPrice.value`, `margin.health.{equity,mmReq}`; prices 1e18, sizes baseDecimals, collateral quoteDecimals). Verified live; our liq solve equals the chain's (ARCHITECTURE.md §3). The newest `fetchOHLCV` bucket is filtered by `closedOnly`. Account leverage is capped as effective leverage instead (ARCHITECTURE.md ADR-8).
+- ⚠️ Explorer tx URL format (`EXPLORER_TX_URL`, overridable): check on the first live tx.
 - Funding: Paper USDso is claimable once per address with no positions (`getPerpVoucherEligibility` / `claimPerpVoucher` ✅). Confirm which wallet is the bounty account.
 - The guard depends on uptime; tell users to also set exchange TP/SL in the app.
